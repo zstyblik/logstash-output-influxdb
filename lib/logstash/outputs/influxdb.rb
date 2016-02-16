@@ -57,7 +57,7 @@ class LogStash::Outputs::InfluxDB < LogStash::Outputs::Base
   # Set the level of precision of `time`
   #
   # only useful when overriding the time value
-  config :time_precision, :validate => ["m", "s", "u"], :default => "s"
+  config :time_precision, :validate => ["n", "u", "ms", "s", "m", "h"], :default => "s"
 
   # Allow value coercion
   #
