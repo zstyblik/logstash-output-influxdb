@@ -56,8 +56,8 @@ class LogStash::Outputs::InfluxDB < LogStash::Outputs::Base
 
   public
   def register
-    require "ftw" # gem ftw
     require 'cgi'
+    require 'net/http'
     @queue = []
 
     @query_params = "&u=#{@user}&p=#{@password.value}&time_precision=#{@time_precision}"
