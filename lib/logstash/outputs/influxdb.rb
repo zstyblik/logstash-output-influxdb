@@ -22,11 +22,8 @@ class LogStash::Outputs::InfluxDB < LogStash::Outputs::Base
   # The database to write
   config :db, :validate => :string, :default => "stats"
 
-  # The hostname or IP address to reach your InfluxDB instance
-  config :host, :validate => :string, :required => true
-
-  # The port for InfluxDB
-  config :port, :validate => :number, :default => 8086
+  # URL of InfluxDB instance, eg. http://localhost:8086
+  config :url, :validate => :string, :required => true
 
   # The user who has access to the named database
   config :user, :validate => :string, :default => nil, :required => true
@@ -60,9 +57,9 @@ class LogStash::Outputs::InfluxDB < LogStash::Outputs::Base
     require 'net/http'
     @queue = []
 
-    @query_params = "&u=#{@user}&p=#{@password.value}&time_precision=#{@time_precision}"
-    @base_url = "http://#{@host}:#{@port}/write?db=#{@db}"
-    @uri = URI.parse("#{@base_url}#{@query_params}")
+    @query_params = "db=#{@db}&u=#{@user}&p=#{@password.value}&time_precision=#{@time_precision}"
+    @base_url = "#{@url}/write"
+    @uri = URI.parse("#{@base_url}?#{@query_params}")
 
     @http = Net::HTTP.new(@uri.hostname, @uri.port)
 

@@ -9,7 +9,7 @@ describe LogStash::Outputs::InfluxDB do
 
     let(:config) do
       {
-        "host" => "localhost",
+        "url" => "http://localhost",
         "user" => "someuser",
         "password" => "somepwd",
       }
