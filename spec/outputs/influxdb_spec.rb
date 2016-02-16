@@ -12,12 +12,6 @@ describe LogStash::Outputs::InfluxDB do
         "host" => "localhost",
         "user" => "someuser",
         "password" => "somepwd",
-        "allow_time_override" => true,
-        "data_points" => {
-          "foo" => "%{foo}",
-          "bar" => "%{bar}",
-          "time" => "%{time}"
-        }
       }
     end
 
@@ -25,20 +19,20 @@ describe LogStash::Outputs::InfluxDB do
 
     before do
       subject.register
-      allow(subject).to receive(:post).with(json_result)
+      allow(subject).to receive(:post).with(result)
 
       2.times do
-        subject.receive(LogStash::Event.new("foo" => "1", "bar" => "2", "time" => "3", "type" => "generator"))
+        subject.receive(LogStash::Event.new("message" => "foo bar", "time" => "3", "type" => "generator"))
       end
 
       # Close / flush the buffer
       subject.close
     end
 
-    let(:json_result) { "[{\"name\":\"logstash\",\"columns\":[\"foo\",\"bar\",\"time\"],\"points\":[[\"1\",\"2\",\"3\"],[\"1\",\"2\",\"3\"]]}]" }
+    let(:result) { "foo bar" }
 
     it "should receive 2 events, flush and call post with 2 items json array" do
-      expect(subject).to have_received(:post).with(json_result)
+      expect(subject).to have_received(:post).with(result)
     end
 
   end
